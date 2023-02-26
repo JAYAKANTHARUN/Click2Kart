@@ -4,16 +4,15 @@ const state={
 }
 
 module.exports.connect=function(done){
-    const url='mongodb://localhost:27017'
+    const url='mongodb://0.0.0.0:27017'
     const dbname='shopping'
 
-    mongoClient.connect( url,{ useUnifiedTopology: true },(err,data)=>{
+    mongoClient.connect( url,(err,data)=>{                   //   { useUnifiedTopology: true },
         
         if (err) return done(err)
         state.db=data.db(dbname)
         done()
     })
-    
 }
 
 module.exports.get=function(){
