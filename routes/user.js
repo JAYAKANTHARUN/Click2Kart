@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/login',(req,res)=>{
   if (req.session.loggedIn){
-    res.redirect('/')
+    res.redirect('/')    //Browser Issue, Try Microsoft Edge
   }
   else{
     res.render('user/login',{"loginErr":req.session.loginErr})
