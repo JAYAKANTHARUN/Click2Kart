@@ -17,7 +17,7 @@ router.get('/',async function (req, res, next) {
   // console.log(user)
   let cartCount=null
   if (req.session.user){
-    cartCount=userHelpers.getCartCount(req.session.user._id)
+    cartCount=await userHelpers.getCartCount(req.session.user._id)
   }
   
   productHelpers.getAllProducts().then((products)=>{
