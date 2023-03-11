@@ -20,7 +20,7 @@
                         <button onclick="changeQuantity('{{this._id}}','{{this.product._id}}',1)" class="cart-item-count mr-3">+</button>
                     </td>
                     <td>
-                        <a href="" class="btn btn-danger">Remove</a>
+                        <a href="/delete-product/{{this._id}}/{{this.product._id}}" onclick="return confirm('Do You want to Delete {{this.product.Name}} ?')" class="btn btn-danger">Remove</a>
                     </td>
 
                 </tr>

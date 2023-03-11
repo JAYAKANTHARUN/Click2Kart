@@ -143,7 +143,17 @@ module.exports={
                 })
             }
         })
-    },
+    },deleteProduct:(proId , Id)=>{
+        return new Promise((resolve , reject)=>{
+                db.get().collection(collection.CART_COLLECTION)
+                .updateOne({_id:objectId(Id),'products.item':objectId(proId)},
+                    {
+                        $pull:{products:{item:objectId(proId)}}
+                    }).then((response)=>{
+                        resolve({removeProduct:true})
+                    })
+                }
+    )},
     getTotalAmount:(userId)=>{
         return new Promise(async(resolve,reject)=>{
             let total=await db.get().collection(collection.CART_COLLECTION).aggregate([

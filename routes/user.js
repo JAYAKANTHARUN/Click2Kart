@@ -79,6 +79,14 @@ router.post('/change-product-quantity',(req,res,next)=>{
   })
 })
 
+router.get('/delete-product/:id/:proId',(req , res)=>{
+  let proId = req.params.proId
+  let Id = req.params.id
+  userHelpers.deleteProduct(proId , Id).then((response)=>{
+    res.redirect('/cart')
+  })
+})
+
 router.get('/place-order',verifyLogin,async(req,res)=>{
   let total=await userHelpers.getTotalAmount(req.session.user._id)
   res.render('user/place-order',{total})
