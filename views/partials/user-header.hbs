@@ -13,7 +13,7 @@
                         <a class="nav-link active" aria-current="page" href="/">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart">Cart[{{cartCount}}]</a>
+                        <a class="nav-link" href="/cart">Cart<span id="cart-count" style="color:rgb(31, 163, 31);font-weight:bolder">{{cartCount}}</span></a>
                     </li>
                     {{#if user}}
                     <li class="nav-item">
