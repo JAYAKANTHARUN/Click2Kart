@@ -283,7 +283,6 @@ module.exports={
                     console.log("New order : ",order)
                     resolve(order)
                 }
-                
             })
         })
     }

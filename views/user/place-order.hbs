@@ -31,18 +31,66 @@
     </div>
 </section>
 
+
+
 <script>
-    $("#checkout-form").submit((e)=>{
+    $("#checkout-form").submit((e) => {
         e.preventDefault()
         $.ajax({
-            url:'place-order',
-            method:'post',
-            data:$('#checkout-form').serialize(),
-            success:(response)=>{
-                if (response.status){
-                    location.href='/order-success'
+            url: 'place-order',
+            method: 'post',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                if (response.codSuccess) {
+                    location.href = '/order-success'
+                }
+                else {
+                    razorpayPayment(response)
                 }
             }
         })
     })
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_u8uz7rfj0GVUXE",
+            "amount": order.amount,
+            "currency": "INR",
+            "name": "JK Corp",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id,
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "handler":function (response){
+                alert(response.razorpay_payment_id)
+                alert(response.razorpay_order_id)
+                alert(response.razorpay_signature)
+
+                verifyPayment(response,order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+    function verifyPayment(payment,order){
+        $.ajax({
+            url:'/verify-payment',
+            data:{
+                payment,
+                order
+            },
+            method:'post'
+        })
+    }
 </script>
