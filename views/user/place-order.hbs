@@ -62,9 +62,6 @@
             "order_id": order.id,
             "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
             "handler":function (response){
-                alert(response.razorpay_payment_id)
-                alert(response.razorpay_order_id)
-                alert(response.razorpay_signature)
 
                 verifyPayment(response,order)
             },
@@ -90,7 +87,15 @@
                 payment,
                 order
             },
-            method:'post'
+            method:'post',
+            success:(response)=>{
+                if (response.status){
+                    location.href = '/order-success'
+                }
+                else{
+                    alert('Payment Failed')
+                }
+            }
         })
     }
 </script>
