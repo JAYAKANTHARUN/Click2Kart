@@ -1,10 +1,10 @@
 <section>
     <a href="/admin/add-product" class="btn btn-success" style="margin-left:1200px;margin-top:20px;margin-bottom:-10px;">Add Product</a>
-    <div class="container">
+    <div class="container"><br><br>
         {{!-- <div class="row mt-4">
             <a href="/admin/add-product" class="btn btn-success" style="margin-left:auto;">Add Product</a>
         </div> --}}
-        <table class="table mt-4">
+        <table class="table mt-4" id="productsTable">
             <thead>
                 <tr>
                     <th scope="col">Slno</th>
@@ -12,6 +12,8 @@
                     <th scope="col">Category</th>
                     <th scope="col">Description</th>
                     <th scope="col">Image</th>
+                    <th scope="col">Options</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -34,3 +36,9 @@
         </table>
     </div>
 </section>
+
+<script>
+    $(function (){
+        $('#productsTable').DataTable()
+    })
+</script>

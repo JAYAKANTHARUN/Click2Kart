@@ -3,7 +3,7 @@ var router = express.Router();
 var productHelpers=require('../helpers/product-helpers')
 var userHelpers=require('../helpers/user-helpers')
 const verifyLogin=(req,res,next)=>{
-  if (req.session.loggedIn){
+  if (req.session.userLoggedIn){
     next()
   }
   else{
@@ -25,14 +25,13 @@ router.get('/',async function (req, res, next) {
 });
 
 router.get('/login',(req,res)=>{
-  if (req.session.loggedIn){
+  if (req.session.user){
     res.redirect('/')    //Browser Issue, Try Microsoft Edge
   }
   else{
-    res.render('user/login',{"loginErr":req.session.loginErr})
-    req.session.loginErr=false
+    res.render('user/login',{"loginErr":req.session.userLoginErr})
+    req.session.userLoginErr=false
   }
-  
 })
 
 router.get('/signup',(req,res)=>{
@@ -41,24 +40,27 @@ router.get('/signup',(req,res)=>{
 
 router.post('/signup',(req,res)=>{
   userHelpers.doSignup(req.body).then((response)=>{
-    res.redirect('/login')
+    req.session.user=response.user
+    req.session.userLoggedIn=true
+    res.redirect('/')
   })
 })
 router.post('/login',(req,res)=>{
   userHelpers.doLogin(req.body).then((response)=>{
     if (response.status){
-      req.session.loggedIn=true
       req.session.user=response.user
+      req.session.userLoggedIn=true
       res.redirect('/')
     }
     else{
-      req.session.loginErr="INVALID USERNAME OR PASSWORD"
+      req.session.userLoginErr="INVALID USERNAME OR PASSWORD"
       res.redirect('/login')
     }
   })
 })
 router.get('/logout',(req,res)=>{
-  req.session.destroy()
+  req.session.user=null
+  req.session.userLoggedIn=false
   res.redirect('/')
 })
 
