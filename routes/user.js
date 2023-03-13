@@ -20,7 +20,7 @@ router.get('/',async function (req, res, next) {
   }
   
   productHelpers.getAllProducts().then((products)=>{
-    res.render('user/view-products', { products,user,cartCount })
+    res.render('user/view-products',{products,user,cartCount})
   })
 });
 
