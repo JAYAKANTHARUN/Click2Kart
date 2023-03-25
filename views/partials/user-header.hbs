@@ -21,6 +21,11 @@
                     </li>
                     {{/if}}
                 </ul>
+                {{#if user}}
+                    <p></p>
+                {{else}}
+                    <a href="/adminlogin" class="btn btn-secondary" style="margin-right:5px">Admin Login</a>
+                {{/if}}
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style="margin-right:25px;">

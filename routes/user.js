@@ -2,6 +2,11 @@ var express = require('express');
 var router = express.Router();
 var productHelpers=require('../helpers/product-helpers')
 var userHelpers=require('../helpers/user-helpers')
+var adminHelpers=require('../helpers/admin-helpers')
+var db=require('../config/connection')
+var collection=require('../config/collections')
+const bcrypt=require('bcrypt')
+var objectId=require('mongodb').ObjectID
 const verifyLogin=(req,res,next)=>{
   if (req.session.userLoggedIn){
     next()
@@ -10,10 +15,22 @@ const verifyLogin=(req,res,next)=>{
     res.redirect('/login')
   }
 }
-
+let flag=0
 /* GET home page. */
 router.get('/',async function (req, res, next) {
+
+  if (flag==0){
+    flag=1
+    const adminDetails={
+      adminUsername:'admin',
+      adminPassword:'admin'
+    }
+    adminDetails.adminPassword=await bcrypt.hash(adminDetails.adminPassword,10)
+    db.get().collection(collection.ADMIN_COLLECTION).insertOne(adminDetails)
+  }
+
   let user=req.session.user
+  let admin=req.session.admin
   let cartCount=null
   if (req.session.user){
     cartCount=await userHelpers.getCartCount(req.session.user._id)
@@ -39,6 +56,7 @@ router.get('/signup',(req,res)=>{
 })
 
 router.post('/signup',(req,res)=>{
+  console.log(req.body)
   userHelpers.doSignup(req.body).then((response)=>{
     req.session.user=response.user
     req.session.userLoggedIn=true
@@ -137,6 +155,36 @@ router.post('/verify-payment',(req,res)=>{
   }).catch((err)=>{
     res.json({status:false,errMsg:''})
   })
+})
+
+router.get('/adminlogin',(req,res)=>{
+  if (req.session.admin){
+    res.render('/admin')    //Browser Issue, Try Microsoft Edge
+  }
+  else{
+    res.render('admin/adminlogin',{"adminLoginErr":req.session.adminLoginErr})
+    req.session.adminLoginErr=false
+  }
+})
+
+router.post('/adminlogin',(req,res)=>{
+  adminHelpers.doLogin(req.body).then((response)=>{
+    if (response.status){
+      req.session.admin=response.admin
+      req.session.adminLoggedIn=true
+      res.redirect('/admin')
+    }
+    else{
+      req.session.adminLoginErr="INVALID USERNAME OR PASSWORD"
+      res.redirect('/adminlogin')
+    }
+  })
+})
+
+router.get('/adminlogout',(req,res)=>{
+  req.session.admin=null
+  req.session.adminLoggedIn=false
+  res.redirect('/')
 })
 
 module.exports = router;

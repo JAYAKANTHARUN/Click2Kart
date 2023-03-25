@@ -54,4 +54,10 @@ router.post('/edit-product/:id',(req,res)=>{
   })
 })
 
+router.get('/adminlogout',(req,res)=>{
+  req.session.admin=null
+  req.session.adminLoggedIn=false
+  res.redirect('/')
+})
+
 module.exports = router;
